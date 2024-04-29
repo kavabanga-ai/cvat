@@ -41,6 +41,7 @@ BASE_DIR = str(Path(__file__).parents[2])
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 INTERNAL_IPS = ['127.0.0.1']
 
+
 def generate_secret_key():
     """
     Creates secret_key.py in such a way that multiple processes calling
@@ -53,7 +54,7 @@ def generate_secret_key():
     if not os.path.isdir(keys_dir):
         os.mkdir(keys_dir)
 
-    secret_key_fname = 'secret_key.py' # nosec
+    secret_key_fname = 'secret_key.py'  # nosec
 
     with tempfile.NamedTemporaryFile(
         mode='wt', dir=keys_dir, prefix=secret_key_fname + ".",
@@ -72,9 +73,10 @@ def generate_secret_key():
             # Discard ours and use theirs.
             pass
 
+
 try:
     sys.path.append(BASE_DIR)
-    from keys.secret_key import SECRET_KEY # pylint: disable=unused-import
+    from keys.secret_key import SECRET_KEY  # pylint: disable=unused-import
 except ModuleNotFoundError:
     generate_secret_key()
     from keys.secret_key import SECRET_KEY
@@ -169,7 +171,6 @@ REST_FRAMEWORK = {
     'EXCEPTION_HANDLER': 'cvat.apps.events.handlers.handle_viewset_exception',
 }
 
-
 REST_AUTH = {
     'REGISTER_SERIALIZER': 'cvat.apps.iam.serializers.RegisterSerializerEx',
     'LOGIN_SERIALIZER': 'cvat.apps.iam.serializers.LoginSerializerEx',
@@ -228,7 +229,7 @@ TEMPLATES = [
 
 # IAM settings
 IAM_TYPE = 'BASIC'
-IAM_BASE_EXCEPTION = None # a class which will be used by IAM to report errors
+IAM_BASE_EXCEPTION = None  # a class which will be used by IAM to report errors
 IAM_DEFAULT_ROLE = 'user'
 
 IAM_ADMIN_ROLE = 'admin'
@@ -240,12 +241,11 @@ IAM_OPA_RULES_PATH = 'cvat/apps/iam/rules:'
 LOGIN_URL = 'rest_login'
 LOGIN_REDIRECT_URL = '/'
 
-OBJECTS_NOT_RELATED_WITH_ORG = ['user', 'function', 'request', 'server',]
+OBJECTS_NOT_RELATED_WITH_ORG = ['user', 'function', 'request', 'server', ]
 
 # ORG settings
 ORG_INVITATION_CONFIRM = 'No'
 ORG_INVITATION_EXPIRY_DAYS = 7
-
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
@@ -257,10 +257,11 @@ ACCOUNT_EMAIL_VERIFICATION = 'none'
 ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
 
 # set UI url to redirect after a successful e-mail confirmation
-#changed from '/auth/login' to '/auth/email-confirmation' for email confirmation message
+# changed from '/auth/login' to '/auth/email-confirmation' for email confirmation message
 ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = '/auth/email-confirmation'
 ACCOUNT_EMAIL_VERIFICATION_SENT_REDIRECT_URL = '/auth/email-verification-sent'
 INCORRECT_EMAIL_CONFIRMATION_URL = '/auth/incorrect-email-confirmation'
+
 
 # Django-RQ
 # https://github.com/rq/django-rq
@@ -274,6 +275,7 @@ class CVAT_QUEUES(Enum):
     QUALITY_REPORTS = 'quality_reports'
     ANALYTICS_REPORTS = 'analytics_reports'
     CLEANING = 'cleaning'
+
 
 redis_inmem_host = os.getenv('CVAT_REDIS_INMEM_HOST', 'localhost')
 redis_inmem_port = os.getenv('CVAT_REDIS_INMEM_PORT', 6379)
@@ -328,7 +330,7 @@ NUCLIO = {
     'DEFAULT_TIMEOUT': int(os.getenv('CVAT_NUCLIO_DEFAULT_TIMEOUT', 120)),
     'FUNCTION_NAMESPACE': os.getenv('CVAT_NUCLIO_FUNCTION_NAMESPACE', 'nuclio'),
     'INVOKE_METHOD': os.getenv('CVAT_NUCLIO_INVOKE_METHOD',
-        default='dashboard' if 'KUBERNETES_SERVICE_HOST' in os.environ else 'direct'),
+                               default='dashboard' if 'KUBERNETES_SERVICE_HOST' in os.environ else 'direct'),
 }
 
 assert NUCLIO['INVOKE_METHOD'] in {'dashboard', 'direct'}
@@ -462,7 +464,7 @@ LOGGING = {
             'level': 'DEBUG',
             'filename': os.path.join(BASE_DIR, 'logs', 'cvat_server.log'),
             'formatter': 'standard',
-            'maxBytes': 1024*1024*50, # 50 MB
+            'maxBytes': 1024 * 1024 * 50,  # 50 MB
             'backupCount': 5,
         },
         'dataset_handler': {
@@ -470,7 +472,7 @@ LOGGING = {
             'level': 'DEBUG',
             'filename': os.path.join(BASE_DIR, 'logs', 'cvat_server_dataset.log'),
             'formatter': 'standard',
-            'maxBytes': 1024*1024*50, # 50 MB
+            'maxBytes': 1024 * 1024 * 50,  # 50 MB
             'backupCount': 3,
         },
         'vector': {
@@ -518,7 +520,7 @@ if os.getenv('DJANGO_LOG_SERVER_HOST'):
     LOGGING['loggers']['vector']['handlers'] += ['vector']
 
 DATA_UPLOAD_MAX_MEMORY_SIZE = 100 * 1024 * 1024  # 100 MB
-DATA_UPLOAD_MAX_NUMBER_FIELDS = None   # this django check disabled
+DATA_UPLOAD_MAX_NUMBER_FIELDS = None  # this django check disabled
 DATA_UPLOAD_MAX_NUMBER_FILES = None
 
 RESTRICTIONS = {
@@ -535,13 +537,13 @@ redis_ondisk_port = os.getenv('CVAT_REDIS_ONDISK_PORT', 6666)
 redis_ondisk_password = os.getenv('CVAT_REDIS_ONDISK_PASSWORD', '')
 
 CACHES = {
-   'default': {
+    'default': {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
     },
     'media': {
-       'BACKEND' : 'django.core.cache.backends.redis.RedisCache',
-       "LOCATION": f"redis://:{urllib.parse.quote(redis_ondisk_password)}@{redis_ondisk_host}:{redis_ondisk_port}",
-       'TIMEOUT' : 3600 * 24, # 1 day
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        "LOCATION": f"redis://:{urllib.parse.quote(redis_ondisk_password)}@{redis_ondisk_host}:{redis_ondisk_port}",
+        'TIMEOUT': 3600 * 24,  # 1 day
     }
 }
 
@@ -561,7 +563,7 @@ CORS_ALLOW_HEADERS = list(default_headers) + [
     'x-organization',
 ]
 
-TUS_MAX_FILE_SIZE = 26843545600 # 25gb
+TUS_MAX_FILE_SIZE = 26843545600  # 25gb
 TUS_DEFAULT_CHUNK_SIZE = 104857600  # 100 mb
 
 # This setting makes request secure if X-Forwarded-Proto: 'https' header is specified by our proxy
@@ -693,14 +695,14 @@ DATABASES = {
     }
 }
 
-BUCKET_CONTENT_MAX_PAGE_SIZE =  500
+BUCKET_CONTENT_MAX_PAGE_SIZE = 500
 
 IMPORT_CACHE_FAILED_TTL = timedelta(days=30)
 IMPORT_CACHE_SUCCESS_TTL = timedelta(hours=1)
 IMPORT_CACHE_CLEAN_DELAY = timedelta(hours=12)
 
 ASSET_MAX_SIZE_MB = 10
-ASSET_SUPPORTED_TYPES = ('image/jpeg', 'image/png', 'image/webp', 'image/gif', 'application/pdf', )
+ASSET_SUPPORTED_TYPES = ('image/jpeg', 'image/png', 'image/webp', 'image/gif', 'application/pdf',)
 ASSET_MAX_IMAGE_SIZE = 1920
 ASSET_MAX_COUNT_PER_GUIDE = 30
 
@@ -709,7 +711,16 @@ SMOKESCREEN_ENABLED = True
 # By default, email backend is django.core.mail.backends.smtp.EmailBackend
 # But it won't work without additional configuration, so we set it to None
 # to check configuration and throw ImproperlyConfigured if thats a case
-EMAIL_BACKEND = None
+# EMAIL_BACKEND = None
+# Email
+EMAIL_BACKEND = os.getenv('EMAIL_BACKEND', 'django.core.mail.backends.smtp.EmailBackend')
+EMAIL_HOST = os.getenv('EMAIL_HOST', 'localhost')
+EMAIL_PORT = os.getenv('EMAIL_PORT', 1025)
+EMAIL_FROM = os.getenv('EMAIL_FROM', 'noreply@somehost.local')
+
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', True)
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', 'info@shamspias.com')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', 'password')
 
 ONE_RUNNING_JOB_IN_QUEUE_PER_USER = to_bool(os.getenv('ONE_RUNNING_JOB_IN_QUEUE_PER_USER', False))
 
@@ -717,4 +728,5 @@ ONE_RUNNING_JOB_IN_QUEUE_PER_USER = to_bool(os.getenv('ONE_RUNNING_JOB_IN_QUEUE_
 CVAT_CONCURRENT_CHUNK_PROCESSING = int(os.getenv('CVAT_CONCURRENT_CHUNK_PROCESSING', 1))
 
 from cvat.rq_patching import update_started_job_registry_cleanup
+
 update_started_job_registry_cleanup()
