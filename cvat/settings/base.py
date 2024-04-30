@@ -712,14 +712,13 @@ SMOKESCREEN_ENABLED = True
 # to check configuration and throw ImproperlyConfigured if thats a case
 # EMAIL_BACKEND = None
 # Email
-EMAIL_BACKEND = os.getenv('EMAIL_BACKEND', 'django.core.mail.backends.smtp.EmailBackend')
-EMAIL_HOST = os.getenv('EMAIL_HOST', 'localhost')
-EMAIL_PORT = os.getenv('EMAIL_PORT', 1025)
-EMAIL_FROM = os.getenv('EMAIL_FROM', 'noreply@somehost.local')
-
-EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', True)
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', 'info@shamspias.com')
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', 'password')
+EMAIL_BACKEND = os.getenv('CVAT_EMAIL_BACKEND', 'django.core.mail.backends.smtp.EmailBackend')
+EMAIL_HOST = os.getenv('CVAT_EMAIL_HOST', 'smtp.gmail.com')
+EMAIL_PORT = os.getenv('CVAT_EMAIL_PORT', 587)
+EMAIL_FROM = os.getenv('CVAT_EMAIL_FROM', 'noreply@kavabanga.team')
+EMAIL_USE_TLS = os.getenv('CVAT_EMAIL_USE_TLS', True)
+EMAIL_HOST_USER = os.getenv('CVAT_EMAIL_HOST_USER', 'info@kavabanga.team')
+EMAIL_HOST_PASSWORD = os.getenv('CVAT_EMAIL_HOST_PASSWORD', 'password')
 
 ONE_RUNNING_JOB_IN_QUEUE_PER_USER = to_bool(os.getenv('ONE_RUNNING_JOB_IN_QUEUE_PER_USER', False))
 
