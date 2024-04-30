@@ -27,6 +27,8 @@ services:
       # If 'yes', wait for a debugger connection on startup
       CVAT_DEBUG_WAIT: '${CVAT_DEBUG_WAIT_CLIENT:-no}'
       COVERAGE_PROCESS_START:
+    env_file:
+      - .env
     ports:
       - '9090:9090'
 
