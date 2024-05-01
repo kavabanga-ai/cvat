@@ -122,7 +122,6 @@ INSTALLED_APPS = [
 ]
 
 SITE_ID = 1
-SITE_URL = os.getenv('SITE_URL', 'https://example.com')
 
 REST_FRAMEWORK = {
     'DEFAULT_PARSER_CLASSES': [
@@ -382,6 +381,11 @@ USE_L10N = True
 USE_TZ = True
 
 CSRF_COOKIE_NAME = "csrftoken"
+
+# Add CSRF Trust Origin
+CSRF_TRUSTED_ORIGIN = os.getenv('CSRF_TRUSTED_ORIGINS', "localhost:3000")
+CSRF_TRUSTED_ORIGIN = CSRF_TRUSTED_ORIGIN.split(',')
+CSRF_TRUSTED_ORIGINS = CSRF_TRUSTED_ORIGIN
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
