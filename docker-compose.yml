@@ -33,6 +33,8 @@ services:
       POSTGRES_USER: root
       POSTGRES_DB: cvat
       POSTGRES_HOST_AUTH_METHOD: trust
+    env_file:
+      - .env
     volumes:
       - cvat_db:/var/lib/postgresql/data
     networks:
