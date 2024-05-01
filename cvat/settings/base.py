@@ -122,6 +122,7 @@ INSTALLED_APPS = [
 ]
 
 SITE_ID = 1
+SITE_URL = os.getenv('SITE_URL', 'https://example.com')
 
 REST_FRAMEWORK = {
     'DEFAULT_PARSER_CLASSES': [
