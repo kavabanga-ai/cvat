@@ -122,7 +122,7 @@ INSTALLED_APPS = [
 ]
 
 SITE_ID = 1
-SITE_URL = os.getenv('SITE_URL', 'https://example.com')
+SITE_URL = os.getenv('SITE_URL', 'https://label-data.kavabanga.team')
 
 REST_FRAMEWORK = {
     'DEFAULT_PARSER_CLASSES': [
