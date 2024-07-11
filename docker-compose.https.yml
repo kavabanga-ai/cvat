@@ -16,19 +16,32 @@ services:
   traefik:
     image: traefik:v2.9
     container_name: traefik
-    environment:
-      TRAEFIK_ENTRYPOINTS_web_ADDRESS: :80
-      TRAEFIK_ENTRYPOINTS_web_HTTP_REDIRECTIONS_ENTRYPOINT_TO: websecure
-      TRAEFIK_ENTRYPOINTS_web_HTTP_REDIRECTIONS_ENTRYPOINT_SCHEME: https
-      TRAEFIK_ENTRYPOINTS_websecure_ADDRESS: :443
-      TRAEFIK_CERTIFICATESRESOLVERS_lets-encrypt_ACME_EMAIL: "${ACME_EMAIL:?Please set the ACME_EMAIL env variable}"
-      TRAEFIK_CERTIFICATESRESOLVERS_lets-encrypt_ACME_TLSCHALLENGE: "true"
-      TRAEFIK_CERTIFICATESRESOLVERS_lets-encrypt_ACME_STORAGE: /letsencrypt/acme.json
+    command:
+      - --api.insecure=true
+      - --providers.docker
+      - --entrypoints.web.address=:80
+      - --entrypoints.websecure.address=:443
+      - --certificatesresolvers.lets-encrypt.acme.tlschallenge=true
+      - --certificatesresolvers.lets-encrypt.acme.email=${ACME_EMAIL:?err}
+      - --certificatesresolvers.lets-encrypt.acme.storage=/letsencrypt/acme.json
     ports:
       - 80:80
       - 443:443
     volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
       - cvat_letsencrypt:/letsencrypt
+
+  filegator:
+    image: filegator/filegator
+    labels:
+      - traefik.http.routers.filegator.rule=Host(`upload-pidrone.kavabanga.team`)
+      - traefik.http.routers.filegator.entrypoints=websecure
+      - traefik.http.routers.filegator.tls.certresolver=lets-encrypt
+    volumes:
+      - filegator_data:/var/www/html/repository
+    environment:
+      FILEGATOR_CONFIGURATION: '/var/www/html/config.php'
 
 volumes:
   cvat_letsencrypt:
+  filegator_data:
